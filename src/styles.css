@@ -1,0 +1,64 @@
+
+
+.d-flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.mb-10 {
+    margin-bottom: 1.5rem;
+}
+
+#error {
+    font-size: 16px;
+    font-weight: 700;
+    max-width: 770px;
+    text-align: center;
+    line-height: 24px;
+}
+#warningIcon {
+    margin-top: 4rem;
+}
+button.retry {
+    width: 124px;
+    height: 41px;
+    border-radius: 4px;
+    border: 1px solid #0FA2CE;
+    background-color: #0FA2CE;
+    font-size: 17px;
+    color: white;
+    cursor: pointer;
+}
+
+/* this is to keep you loading wrapper on the middle of screen */
+div.pulse-wrapper {
+    top: 50%;
+    left: 50%;
+    margin-top: 100px;
+    margin-bottom: 60px;
+}
+  
+div.pulse {
+    height: 35px;
+    width: 35px;
+    background-color: rgb(141, 147, 154);
+    border-radius: 50%;
+    animation: pulse 1s infinite;
+}
+  
+@keyframes pulse {
+    40% {
+        transform: scale(1.5);
+        box-shadow: 0 0 0 20px rgba(141, 147, 154, 0.3);
+    }
+
+    80% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 40px rgba(141, 147, 154, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(141, 147, 154, 0)
+    }
+}
