@@ -73,7 +73,6 @@ export class AuthenticationService {
     }
 
     redirectToNextUri() {
-        console.log("Also redirecting to", this.nextUri);
         window.location.href = this.nextUri;
     }
 
@@ -87,23 +86,18 @@ export class AuthenticationService {
     }
 
     tryLoad(url) {
-        console.log("On tryLoad");
         return fetch(url, { method: "HEAD", credentials: "include" })
             .then((response) => {
-                console.log("On tryLoad Error 001", response);
                 return response.status === 200
                     ? Promise.resolve()
                     : Promise.reject(new Error(AppConstant.InternalLoadUrlFailedError))
             })
             .catch((e) => {
-                console.log("On tryLoad Error", e.message);
-                console.error(e);
                 return Promise.reject(new Error(AppConstant.InternalLoadUrlFailedError))
             });
     }
 
     authorizeUser(context) {
-        console.log("Inside authorizeUser");
         return this.microsoftTeams.authentication
             .authenticate({
                 url: this.getLoginUrl(context.user.loginHint),
@@ -156,18 +150,14 @@ export class AuthenticationService {
             .then(() => this.microsoftTeams.app.getContext())
             .then((context) => {
                 if (context?.app?.host?.clientType === "web") {
-                    console.log("It's web calling next then");
                     this.redirectToNextUri();
                     return Promise.resolve();
                 }
-                console.log("Before try reload");
                 return this.tryLoad(this.nextUri)
                     .then(() => {
-                        console.log("Try load goes success");
                         this.redirectToNextUri()
                     })
                     .catch((e) => {
-                        console.log("Handel error", e.message);
                         return this.authorizeUser(context);
                     });
             })
