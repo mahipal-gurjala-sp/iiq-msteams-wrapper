@@ -37,7 +37,7 @@ export class AuthenticationService {
         document.getElementById("btnRetry").onclick = () => this.clickRetryButton();
     }
 
-    changeLoaderState(state) {
+    changeLoaderState(state: boolean) {
         let pulseLoader = document.getElementById("pulseLoader");
         let warningIcon = document.getElementById("warningIcon");
         if (state) {
@@ -76,7 +76,7 @@ export class AuthenticationService {
         window.location.href = this.nextUri;
     }
 
-    getLoginUrl(loginHint) {
+    getLoginUrl(loginHint: string) {
         const redirectUri = encodeURIComponent(
             `${this.nextUri}${this.nextUri.endsWith("/") ? "" : "/"
             }?${AppConstant.AuthCompleteSearchParam}=true`
@@ -85,7 +85,7 @@ export class AuthenticationService {
         return `https://login.microsoftonline.com/${this.tenantId}/oauth2/authorize?response_type=code&client_id=${this.appId}&scope=openid&redirect_uri=${redirectUri}&sso_reload=true&login_hint=${loginHint}`;
     }
 
-    tryLoad(url) {
+    tryLoad(url: string) {
         return fetch(url, { method: "HEAD", credentials: "include" })
             .then((response) => {
                 return response.status === 200
@@ -93,11 +93,12 @@ export class AuthenticationService {
                     : Promise.reject(new Error(AppConstant.InternalLoadUrlFailedError))
             })
             .catch((e) => {
+                console.error(e);
                 return Promise.reject(new Error(AppConstant.InternalLoadUrlFailedError))
             });
     }
 
-    authorizeUser(context) {
+    authorizeUser(context: any) {
         return this.microsoftTeams.authentication
             .authenticate({
                 url: this.getLoginUrl(context.user.loginHint),
@@ -106,10 +107,6 @@ export class AuthenticationService {
                 isExternal: false,
             })
             .then(() => this.redirectToNextUri());
-    }
-
-    replacePlaceholder(template, ...values) {
-        return template.replace(/{(\d+)}/g, (match, index) => values[index] || match);
     }
 
     haveValidParams() {
@@ -144,11 +141,11 @@ export class AuthenticationService {
     }
 
     startAuthentication() {
-        this.microsoftTeams = window['microsoftTeams'];
+        this.microsoftTeams = (window as any)['microsoftTeams'];
         this.microsoftTeams.app
             .initialize()
             .then(() => this.microsoftTeams.app.getContext())
-            .then((context) => {
+            .then((context: any) => {
                 if (context?.app?.host?.clientType === "web") {
                     this.redirectToNextUri();
                     return Promise.resolve();
@@ -161,7 +158,7 @@ export class AuthenticationService {
                         return this.authorizeUser(context);
                     });
             })
-            .catch((error) => this.catchError(error));
+            .catch((error: Error) => this.catchError(error));
     }
 
     catchError(error: Error) {

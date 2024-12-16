@@ -38,7 +38,7 @@ export class TranslationService {
     }
 
     // Replace placeholder like {0} or {1} on the string
-    replacePlaceholder(template: string, ...values) {
+    replacePlaceholder(template: string, ...values: string[]) {
         return template.replace(/{(\d+)}/g, (match, index) => values[index] || match);
     }
 }
