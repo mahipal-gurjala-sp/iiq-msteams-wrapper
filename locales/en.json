@@ -1,0 +1,9 @@
+{
+    "verifying_credentials": "Verifying your credentials. This may take a moment.",
+    "teams_sdk_error": "An error occurred while initializing the MS Teams SDK. Please review the configuration settings and try again. If the issue persists, contact support.",
+    "general_error": "Failed to initialize. Please recheck configuration instructions.",
+    "missing_param_single": "Configuration Error: Please check and correct your configuration settings. \nRequired parameter {0} is missing.",
+    "missing_param_multiple": "Configuration Error: Please check and correct your configuration settings. \nRequired parameters such as {0} are missing.",
+    "wrong_app_url": "Authorization Failed: Please verify that the Approvals App URL provided is correct and accessible. \nPlease review the documentation for configuration details.",
+    "auth_popup_closed": "Authorization failed: Please check your Microsoft account credentials and try again"
+  }

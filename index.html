@@ -2,99 +2,21 @@
   <head>
     <title>Loading...</title>
     <script src="https://res.cdn.office.net/teams-js/2.26.0/js/MicrosoftTeams.min.js"></script>
-    <script>
-      const PopupWidth = 600;
-      const PopupHeight = 535;
-
-      const TenantIdSearchParam = "tenantId";
-      const AppIdSearchParam = "appId";
-      const NextUriSearchParam = "nextUri";
-
-      const AuthCompleteSearchParam = "authComplete";
-
-      const WrongConfigError =
-        "App is not configured correctly. Please recheck instructions.";
-      const GeneralFailureError =
-        "Failed to initialize. Please recheck configuration instructions.";
-
-      const InternalLoadUrlFailedError = "InternalLoadUrlFailedError";
-
-      const url = new URL(window.location.href);
-      const nextUri = url.searchParams.get(NextUriSearchParam);
-      const tenantId = url.searchParams.get(TenantIdSearchParam);
-      const appId = url.searchParams.get(AppIdSearchParam);
-
-      function logError(error, message) {
-        if (error) {
-          console.error(error);
-        }
-        if (message) {
-          document.getElementById("error").innerText = message;
-        }
-      }
-
-      function redirectToNextUri() {
-        window.location.href = nextUri;
-      }
-
-      function getLoginUrl(loginHint) {
-        const redirectUri = encodeURIComponent(
-          `${nextUri}${
-            nextUri.endsWith("/") ? "" : "/"
-          }?${AuthCompleteSearchParam}=true`
-        );
-        return `https://login.microsoftonline.com/${tenantId}/oauth2/authorize?response_type=code&client_id=${appId}&scope=openid&redirect_uri=${redirectUri}&sso_reload=true&login_hint=${loginHint}`;
-      }
-
-      function tryLoad(url) {
-        return fetch(url, { method: "HEAD", credentials: "include" })
-          .then((response) =>
-            response.status === 200
-              ? Promise.resolve()
-              : Promise.reject(new Error(InternalLoadUrlFailedError))
-          )
-          .catch(() =>
-            Promise.reject(new Error(InternalLoadUrlFailedError))
-          );
-      }
-
-      function authorizeUser(context) {
-        return microsoftTeams.authentication
-          .authenticate({
-            url: getLoginUrl(context.user.loginHint),
-            width: PopupWidth,
-            height: PopupHeight,
-            isExternal: false,
-          })
-          .then(() => redirectToNextUri());
-      }
-
-      window.onload = function () {
-        if (!tenantId || !appId || !nextUri) {
-          const error = `One of required parameters (${TenantIdSearchParam}, ${AppIdSearchParam}, ${NextUriSearchParam}) is missing`;
-          logError(undefined, `${WrongConfigError}\n${error}`);
-          return;
-        }
-
-        microsoftTeams.app
-          .initialize()
-          .then(() => microsoftTeams.app.getContext())
-          .then((context) => {
-            if (context?.app?.host?.clientType === "web") {
-              redirectToNextUri();
-              return Promise.resolve();
-            }
-
-            return tryLoad(nextUri)
-              .then(() => redirectToNextUri())
-              .catch(() => authorizeUser(context));
-          })
-          .catch((error) => logError(error, GeneralFailureError));
-      };
-    </script>
   </head>
   <body style="background-color: white; color: black">
-    <span>Loading...</span>
-    <pre id="error" style="color: red"></pre>
+    
+    <div class="d-flex">
+      <div id="pulseLoader" class="pulse-wrapper">
+        <div class="pulse"></div>
+      </div>
+      <div id="warningIcon" style="display: none;">
+        <svg width="47" class="mb-10" height="42" viewBox="0 0 37 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.4987 0C19.5249 0 20.4716 0.535714 20.992 1.41429L36.6025 27.7C37.1301 28.5857 37.1301 29.6786 36.6169 30.5643C36.1038 31.45 35.1426 32 34.1091 32H2.88816C1.85469 32 0.89349 31.45 0.380368 30.5643C-0.132755 29.6786 -0.125528 28.5786 0.394822 27.7L16.0053 1.41429C16.5257 0.535714 17.4724 0 18.4987 0ZM18.4987 9.14286C17.5375 9.14286 16.7642 9.90714 16.7642 10.8571V18.8571C16.7642 19.8071 17.5375 20.5714 18.4987 20.5714C19.4599 20.5714 20.2332 19.8071 20.2332 18.8571V10.8571C20.2332 9.90714 19.4599 9.14286 18.4987 9.14286ZM20.8113 25.1429C20.8113 24.5366 20.5677 23.9553 20.134 23.5266C19.7002 23.098 19.112 22.8571 18.4987 22.8571C17.8853 22.8571 17.2971 23.098 16.8634 23.5266C16.4296 23.9553 16.186 24.5366 16.186 25.1429C16.186 25.7491 16.4296 26.3304 16.8634 26.7591C17.2971 27.1878 17.8853 27.4286 18.4987 27.4286C19.112 27.4286 19.7002 27.1878 20.134 26.7591C20.5677 26.3304 20.8113 25.7491 20.8113 25.1429Z" fill="#E21848"/>
+        </svg>
+      </div>
+      <label id="error" class="mb-10"> __('verifying_credentials') </label>
+      <button id="btnRetry" class="retry" style="display: none;"> Retry </button>
+    </div>
+
   </body>
 </html>

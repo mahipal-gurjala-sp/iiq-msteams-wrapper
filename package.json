@@ -1,0 +1,22 @@
+{
+    "name": "iiq-msteams-wrapper",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "build": "webpack --mode development",
+      "build-prod": "webpack --mode production",
+      "watch": "webpack --watch --mode development",
+      "start": "webpack --mode development && serve dist"
+    },
+    "keywords": [],
+    "license": "MIT",
+    "devDependencies": {
+      "css-loader": "^7.1.2",
+      "html-webpack-plugin": "^5.6.3",
+      "serve": "^14.2.4",
+      "style-loader": "^4.0.0",
+      "webpack": "^5.38.1",
+      "webpack-cli": "^4.7.2"
+    }
+  }
