@@ -1,7 +1,6 @@
 import { AppConstant } from "../constants/app-constant";
 import { Translations } from "../interfaces/translations";
 
-
 export class TranslationService {
 
     private currentLanguage: string;
